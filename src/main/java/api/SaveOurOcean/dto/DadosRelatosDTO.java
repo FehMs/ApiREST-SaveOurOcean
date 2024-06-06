@@ -1,7 +1,6 @@
-package api.SaveOurOcean.DTO;
+package api.SaveOurOcean.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public record DadosRelatosDTO(
         @NotBlank
