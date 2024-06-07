@@ -1,28 +1,31 @@
 version: '3'
 services:
-  app:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: SavspreOurOcean
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  savspreourocean-image:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
-      - oracledb
+      - mysql
     environment:
-      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracledb:1521:ORCL
-      SPRING_DATASOURCE_USERNAME: system
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/SavspreOurOcean
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
 
-  oracledb:
-    image: oracleinanutshell/oracle-xe-11g
-    ports:
-      - "1521:1521"
-    environment:
-      ORACLE_ALLOW_REMOTE: "true"
-      ORACLE_DISABLE_ASYNCH_IO: "true"
-      ORACLE_PASSWORD: password
-    volumes:
-      - oracledb-data:/u01/app/oracle
 
 volumes:
-  oracledb-data:
+  mysql-data:
